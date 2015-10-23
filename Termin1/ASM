@@ -62,6 +62,103 @@
 -	0x8254	<main+60>:		andeq	r2, r1, r4, lsr #24
 -	0x8258	<main+64>:		andeq	r2, r1, r8, lsr #24
 
+@ Aufgabe 5
+@ Opti = 0
+	10	{
+-	0x8218	<main>:		push	{r11}		; (str r11, [sp, #-4]!)
+-	0x821c	<main+4>:		add	r11, sp, #0	; 0x0
+-	0x8220	<main+8>:		sub	sp, sp, #8	; 0x8
+	11		int c, d;
+	12		c= 0x44;
+-	0x8224	<main+12>:		mov	r3, #68	; 0x44
+-	0x8228	<main+16>:		str	r3, [r11, #-8]
+	13		d= 0x99;
+-	0x822c	<main+20>:		mov	r3, #153	; 0x99
+-	0x8230	<main+24>:		str	r3, [r11, #-4]
+	14		
+	15		a=c;
+-	0x8234	<main+28>:		ldr	r3, [pc, #36]	; 0x8260 <main+72>
+-	0x8238	<main+32>:		ldr	r2, [r11, #-8]
+-	0x823c	<main+36>:		str	r2, [r3]
+	16		b=d;
+-	0x8240	<main+40>:		ldr	r3, [pc, #28]	; 0x8264 <main+76>
+-	0x8244	<main+44>:		ldr	r2, [r11, #-4]
+-	0x8248	<main+48>:		str	r2, [r3]
+	17		return (0);
+-	0x824c	<main+52>:		mov	r3, #0	; 0x0
+-	0x8250	<main+56>:		mov	r0, r3
+-	0x8254	<main+60>:		add	sp, r11, #0	; 0x0
+-	0x8258	<main+64>:		pop	{r11}
+-	0x825c	<main+68>:		bx	lr
+-	0x8260	<main+72>:		andeq	r2, r1, r4, lsr r12
+-	0x8264	<main+76>:		andeq	r2, r1, r0, lsr r12
 
 
+@ Aufgabe 6
+@ Opti = 0
 
+	15	{	
+-	0x8248	<main>:		push	{r11, lr}
+-	0x824c	<main+4>:		add	r11, sp, #4	; 0x4
+-	0x8250	<main+8>:		sub	sp, sp, #8	; 0x8
+	16		int a=0x22, b=0x44;
+	0x8254	<main+12>:		mov	r3, #34	; 0x22
+-	0x8258	<main+16>:		str	r3, [r11, #-12]
+-	0x825c	<main+20>:		mov	r3, #68	; 0x44
+-	0x8260	<main+24>:		str	r3, [r11, #-8]
+	17		c=Addition(a, b);
+-	0x8264	<main+28>:		ldr	r0, [r11, #-12]
+-	0x8268	<main+32>:		ldr	r1, [r11, #-8]
+-	0x826c	<main+36>:		bl	0x8218 <Addition>
+-	0x8270	<main+40>:		mov	r2, r0
+-	0x8274	<main+44>:		ldr	r3, [pc, #16]	; 0x828c <main+68>
+-	0x8278	<main+48>:		str	r2, [r3]
+	18		
+	19		return (0);
+-	0x827c	<main+52>:		mov	r3, #0	; 0x0
+-	0x8280	<main+56>:		mov	r0, r3
+-	0x8284	<main+60>:		sub	sp, r11, #4	; 0x4
+-	0x8288	<main+64>:		pop	{r11, pc}
+-	0x828c	<main+68>:		andeq	r2, r1, r4, ror r12
+
+
+ @ Opti = 1
+ 
+ 	15	{	
+-	0x8220	<main>:		push	{lr}		; (str lr, [sp, #-4]!)
+	16		int a=0x22, b=0x44;
+	17		c=Addition(a, b);
+	0x8224	<main+4>:		mov	r0, #34	; 0x22
+-	0x8228	<main+8>:		mov	r1, #68	; 0x44
+-	0x822c	<main+12>:		bl	0x8218 <Addition>
+-	0x8230	<main+16>:		ldr	r3, [pc, #8]	; 0x8240 <main+32>
+-	0x8234	<main+20>:		str	r0, [r3]
+-	0x8238	<main+24>:		mov	r0, #0	; 0x0
+-	0x823c	<main+28>:		pop	{pc}		; (ldr pc, [sp], #4)
+-	0x8240	<main+32>:		andeq	r2, r1, r12, lsl r12
+
+@ Aufgabe 7
+@ opti = 0
+	15	{	
+-	0x8248	<main>:		push	{r11, lr}
+-	0x824c	<main+4>:		add	r11, sp, #4	; 0x4
+-	0x8250	<main+8>:		sub	sp, sp, #8	; 0x8
+	16		int a=0x22, b=0x44;
+	0x8254	<main+12>:		mov	r3, #34	; 0x22
+-	0x8258	<main+16>:		str	r3, [r11, #-12]
+-	0x825c	<main+20>:		mov	r3, #68	; 0x44
+-	0x8260	<main+24>:		str	r3, [r11, #-8]
+	17		c=Addition(a, b);
+-	0x8264	<main+28>:		ldr	r0, [r11, #-12]
+-	0x8268	<main+32>:		ldr	r1, [r11, #-8]
+-	0x826c	<main+36>:		bl	0x8218 <Addition>
+-	0x8270	<main+40>:		mov	r2, r0
+-	0x8274	<main+44>:		ldr	r3, [pc, #16]	; 0x828c <main+68>
+-	0x8278	<main+48>:		str	r2, [r3]
+	18		
+	19		return (0);
+-	0x827c	<main+52>:		mov	r3, #0	; 0x0
+-	0x8280	<main+56>:		mov	r0, r3
+-	0x8284	<main+60>:		sub	sp, r11, #4	; 0x4
+-	0x8288	<main+64>:		pop	{r11, pc}
+-	0x828c	<main+68>:		andeq	r2, r1, r4, ror r12
