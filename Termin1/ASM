@@ -1,0 +1,67 @@
+@ Aufgabe 3:
+@ opti = 0
+	0x8218	<main>:		push	{r11}		; (str r11, [sp, #-4]!)
+-	0x821c	<main+4>:		add	r11, sp, #0	; 0x0
+-	0x8220	<main+8>:		sub	sp, sp, #8	; 0x8
+	0x8224	<main+12>:		mov	r3, #1	; 0x1
+-	0x8228	<main+16>:		str	r3, [r11, #-8]
+-	0x822c	<main+20>:		mov	r3, #2	; 0x2
+-	0x8230	<main+24>:		str	r3, [r11, #-4]
+-	0x8234	<main+28>:		mov	r3, #0	; 0x0
+-	0x8238	<main+32>:		mov	r0, r3
+-	0x823c	<main+36>:		add	sp, r11, #0	; 0x0
+-	0x8240	<main+40>:		pop	{r11}
+-	0x8244	<main+44>:		bx	lr
+
+----
+
+
+	8	{
+	0x8218	<main>:		push	{r11}		; (str r11, [sp, #-4]!)
+-	0x821c	<main+4>:		add	r11, sp, #0	; 0x0
+-	0x8220	<main+8>:		sub	sp, sp, #8	; 0x8
+	9		int a, b;
+	10		a=0x3333;
+	0x8224	<main+12>:		mov	r3, #13056	; 0x3300
+-	0x8228	<main+16>:		add	r3, r3, #51	; 0x33
+-	0x822c	<main+20>:		str	r3, [r11, #-8]
+	11		b=0x6666;
+-	0x8230	<main+24>:		mov	r3, #26112	; 0x6600
+-	0x8234	<main+28>:		add	r3, r3, #102	; 0x66
+-	0x8238	<main+32>:		str	r3, [r11, #-4]
+	12		return (0);
+-	0x823c	<main+36>:		mov	r3, #0	; 0x0
+-	0x8240	<main+40>:		mov	r0, r3
+-	0x8244	<main+44>:		add	sp, r11, #0	; 0x0
+-	0x8248	<main+48>:		pop	{r11}
+-	0x824c	<main+52>:		bx	lr
+
+
+@ Aufgabe 4:
+@ opti = 0
+      
+10	{
+-	0x8218	<main>:		push	{r11}		; (str r11, [sp, #-4]!)
+-	0x821c	<main+4>:		add	r11, sp, #0	; 0x0
+	11		b=0x666;
+	0x8220	<main+8>:		ldr	r2, [pc, #44]	; 0x8254 <main+60>
+-	0x8224	<main+12>:		mov	r3, #1632	; 0x660
+-	0x8228	<main+16>:		add	r3, r3, #6	; 0x6
+	0x822c	<main+20>:		str	r3, [r2]
+	12		a=0x999;	
+-	0x8230	<main+24>:		ldr	r2, [pc, #32]	; 0x8258 <main+64>
+-	0x8234	<main+28>:		mov	r3, #2448	; 0x990
+-	0x8238	<main+32>:		add	r3, r3, #9	; 0x9
+-	0x823c	<main+36>:		str	r3, [r2]
+	13		return (0);
+-	0x8240	<main+40>:		mov	r3, #0	; 0x0
+-	0x8244	<main+44>:		mov	r0, r3
+-	0x8248	<main+48>:		add	sp, r11, #0	; 0x0
+-	0x824c	<main+52>:		pop	{r11}
+-	0x8250	<main+56>:		bx	lr
+-	0x8254	<main+60>:		andeq	r2, r1, r4, lsr #24
+-	0x8258	<main+64>:		andeq	r2, r1, r8, lsr #24
+
+
+
+
