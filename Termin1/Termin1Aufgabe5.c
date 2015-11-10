@@ -4,8 +4,21 @@
 // Matr.: ___________; ____________
 // vom:   ___________
 
+int c, d;
+
+int addition(int *a, int *b, int c){
+	return *a+*b+c;
+
+}
+
 int main (void)
 {
+	int a, b;
+	a= 0x1010101;
+	b= 0x2020202;
+	c= 0x3030303;
 	
+	d= addition(&a, &b, c);
 	return (0);
 }
+

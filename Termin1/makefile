@@ -1,11 +1,11 @@
 # Quellendatei
-FILE = Termin1Aufgabe6
+FILE = Termin1Aufgabe5
 # Toolchain
 TC = arm-eb63-elf-
 # Compiler
 GCC = gcc
 # Optimierungsstufe
-OPTI = 0
+OPTI = 1
 			
 all:
 # Übersetzen und binden der Quelldatei
