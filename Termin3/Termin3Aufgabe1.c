@@ -10,68 +10,86 @@
 #include "../h/aic.h"
 
 void taste_irq_handler (void) __attribute__ ((interrupt));
-
-// Interruptserviceroutine für die Tasten SW1 und SW2
+ 
+// Interruptserviceroutine der Taster SW1 und SW2
 void taste_irq_handler (void)
 {
-  StructPIO* piobaseB   = PIOB_BASE;		// Basisadresse PIO B
-  StructAIC* aicbase  = AIC_BASE;		//__
+  StructPIO* piobaseA = PIOA_BASE;		// Basisadresse des PIOA 
+  StructPIO* piobaseB = PIOB_BASE;		// Basisadresse des PIOB
+  StructAIC* aicbase = AIC_BASE;		// Basisadresse des AdvancedInterruptControler
 	
 // ab hier entsprechend der Aufgabestellung ergänzen
 // *************************************************
 
-	
-	
-	aicbase->AIC_EOICR = piobaseB->PIO_ISR;	//__
+	if(!(piobaseB->PIO_PDSR & KEY2))
+		piobaseA->PIO_PDR = (1<<PIOTIOA3);	//Aktivieren des Ausgang durch Peripherie Enable (!clock)		
+	if(!(piobaseB->PIO_PDSR & KEY1))
+		piobaseA->PIO_PER  = (1<<PIOTIOA3);	// Deaktivieren des Ausgang durch Peripherie Enable (!clock)
+  	
+	aicbase->AIC_EOICR = piobaseB->PIO_ISR;	// End of Interrupt Command Register wird durch das Interrupt Status Register beschrieben
 }
+
+
 
 // Timer3 initialisieren
 void Timer3_init( void )
 {
-  StructTC* timerbase3  = TCB3_BASE;		// Basisadressse TC Block 1
-  StructPIO* piobaseA   = PIOA_BASE;		// Basisadresse PIO B
+  StructTC* timerbase3  = TCB3_BASE;		// Basisadressse des TC
+  StructPIO* piobaseA   = PIOA_BASE;		// Basisadresse des PIOB
 
-	timerbase3->TC_CCR = TC_CLKDIS;			// Disable Clock
+	timerbase3->TC_CCR = TC_CLKDIS;		// Disable Clock
  
   // Initialize the mode of the timer 3
   timerbase3->TC_CMR =
-    TC_ACPC_CLEAR_OUTPUT  |    //ACPC    : Register C clear TIOA
-    TC_ACPA_SET_OUTPUT    |    //ACPA    : Register A set TIOA
-    TC_WAVE               |    //WAVE    : Waveform mode
-    TC_CPCTRG             |    //CPCTRG  : Register C compare trigger enable
-    TC_CLKS_MCK1024;           //TCCLKS  : MCKI / 1024
+    TC_ACPC_CLEAR_OUTPUT  |    // RC clear TIOA
+    TC_ACPA_SET_OUTPUT    |    // RA set TIOA
+    TC_WAVE               |    //Waveform mode aktivieren
+    TC_CPCTRG             |    //CompareTrigger
+    TC_CLKS_MCK1024;           //Select des Timers
 
   // Initialize the counter:
-  timerbase3->TC_RA = 300;	//__
-  timerbase3->TC_RC = 600;	//__
+  timerbase3->TC_RA = 244; // ((25.000.000/1024)/100
+  timerbase3->TC_RC = 488; //((25.000.000/1024)*2)/100
 
   // Start the timer :
-  timerbase3->TC_CCR = TC_CLKEN ;				//__
-  timerbase3->TC_CCR = TC_SWTRG ;				//__
-  piobaseA->PIO_PER  = (1<<PIOTIOA3) ;	//__
-  piobaseA->PIO_OER  = (1<<PIOTIOA3) ;	//__
-  piobaseA->PIO_CODR = (1<<PIOTIOA3) ;	//__
+  timerbase3->TC_CCR = TC_CLKEN ;	// Aktiviere die clock
+  timerbase3->TC_CCR = TC_SWTRG ;	// auf Software Trigger stellen
+  piobaseA->PIO_PER  = (1<<PIOTIOA3) ;	// clock für PIOTIOA3 aktivieren
+  piobaseA->PIO_OER  = (1<<PIOTIOA3) ;	// Als Output setzen
+  piobaseA->PIO_CODR = (1<<PIOTIOA3) ;	// Setze ausgang auf 0
 }
+
+
 
 int main(void)
 {
 
-	StructPMC* pmcbase	= PMC_BASE;			// Basisadresse des PMC
-	StructPIO* piobaseA   	= PIOA_BASE;		// Basisadresse PIO A
-	StructPIO* piobaseB   	= PIOB_BASE;		// Basisadresse PIO B
+	StructPMC* pmcbase	= PMC_BASE;	// Basisadresse PMC
+	StructPIO* piobaseA   	= PIOA_BASE;	// Basisadresse PIOA
+	StructPIO* piobaseB   	= PIOB_BASE;	// Basisadresse PIOB
+	StructAIC* aicbase	= AIC_BASE;	// Basisadresse AIC
 
-	pmcbase->PMC_PCER	= 0x4000;	// Peripheral Clocks einschalten für PIOB, _____ 
+	pmcbase->PMC_PCER	= 0x6200;	//PIOA, PIOB, TIMER3 einschalten  
 	
-// ab hier entsprechend der Aufgabestellung ergänzen
+// ab hier entsprechend der Aufgabestellung ergÃ¤nzen
 //**************************************************
-
-
-
 	
-	while(1)
-	{
-
-	}
+	piobaseB->PIO_PER = 0x18;		// SW1 und SW2 aktivieren
+	piobaseB->PIO_ODR = 0x18;		// SW1 und SW2 als Input definieren
+	
+	
+	aicbase->AIC_IDCR = 0x4000; 		//deaktivieren interrupts for PIOB
+	aicbase->AIC_ICCR = 0x4000;		// Löschen der Interrupts
+	aicbase->AIC_SVR[PIOB_ID] = (unsigned int)taste_irq_handler;
+	aicbase->AIC_SMR[PIOB_ID] = 0x7; 
+	aicbase->AIC_IECR = 0x4000;		//Aktiviere Interrupts an PIOB
+	piobaseB->PIO_IER = KEY1 | KEY2; 	//enable Interrupts inerhalb der PIOB	
+		
+	Timer3_init();
+ 
+			
+	while(1);
 	
 	return 0;
 }
+

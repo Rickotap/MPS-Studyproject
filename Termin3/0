@@ -1,0 +1,153 @@
+	.file	"Termin3Aufgabe1.c"
+	.text
+	.align	2
+	.global	taste_irq_handler
+	.type	taste_irq_handler, %function
+taste_irq_handler:
+	@ Interrupt Service Routine.
+	@ args = 0, pretend = 0, frame = 12
+	@ frame_needed = 1, uses_anonymous_args = 0
+	@ link register save eliminated.
+	stmfd	sp!, {r2, r3, fp}
+	add	fp, sp, #8
+	sub	sp, sp, #12
+	mov	r3, #-1342177280
+	mov	r3, r3, asr #14
+	str	r3, [fp, #-20]
+	mov	r3, #-2147483648
+	mov	r3, r3, asr #15
+	str	r3, [fp, #-16]
+	mov	r3, #-2147483648
+	mov	r3, r3, asr #19
+	str	r3, [fp, #-12]
+	ldr	r3, [fp, #-16]
+	ldr	r3, [r3, #60]
+	and	r3, r3, #16
+	cmp	r3, #0
+	bne	.L2
+	ldr	r3, [fp, #-20]
+	mov	r2, #2
+	str	r2, [r3, #4]
+.L2:
+	ldr	r3, [fp, #-16]
+	ldr	r3, [r3, #60]
+	and	r3, r3, #8
+	cmp	r3, #0
+	bne	.L3
+	ldr	r3, [fp, #-20]
+	mov	r2, #2
+	str	r2, [r3, #0]
+.L3:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [r3, #76]
+	ldr	r3, [fp, #-12]
+	str	r2, [r3, #304]
+	sub	sp, fp, #8
+	ldmfd	sp!, {r2, r3, fp}
+	subs	pc, lr, #4
+	.size	taste_irq_handler, .-taste_irq_handler
+	.align	2
+	.global	Timer3_init
+	.type	Timer3_init, %function
+Timer3_init:
+	@ args = 0, pretend = 0, frame = 8
+	@ frame_needed = 1, uses_anonymous_args = 0
+	@ link register save eliminated.
+	str	fp, [sp, #-4]!
+	add	fp, sp, #0
+	sub	sp, sp, #8
+	mov	r3, #-1476395008
+	mov	r3, r3, asr #13
+	str	r3, [fp, #-8]
+	mov	r3, #-1342177280
+	mov	r3, r3, asr #14
+	str	r3, [fp, #-4]
+	ldr	r3, [fp, #-8]
+	mov	r2, #2
+	str	r2, [r3, #0]
+	ldr	r2, [fp, #-8]
+	mov	r3, #638976
+	add	r3, r3, #4
+	str	r3, [r2, #4]
+	ldr	r3, [fp, #-8]
+	mov	r2, #244
+	str	r2, [r3, #20]
+	ldr	r3, [fp, #-8]
+	mov	r2, #488
+	str	r2, [r3, #28]
+	ldr	r3, [fp, #-8]
+	mov	r2, #1
+	str	r2, [r3, #0]
+	ldr	r3, [fp, #-8]
+	mov	r2, #4
+	str	r2, [r3, #0]
+	ldr	r3, [fp, #-4]
+	mov	r2, #2
+	str	r2, [r3, #0]
+	ldr	r3, [fp, #-4]
+	mov	r2, #2
+	str	r2, [r3, #16]
+	ldr	r3, [fp, #-4]
+	mov	r2, #2
+	str	r2, [r3, #52]
+	add	sp, fp, #0
+	ldmfd	sp!, {fp}
+	bx	lr
+	.size	Timer3_init, .-Timer3_init
+	.align	2
+	.global	main
+	.type	main, %function
+main:
+	@ args = 0, pretend = 0, frame = 16
+	@ frame_needed = 1, uses_anonymous_args = 0
+	stmfd	sp!, {fp, lr}
+	add	fp, sp, #4
+	sub	sp, sp, #16
+	mov	r3, #-1610612736
+	mov	r3, r3, asr #15
+	str	r3, [fp, #-20]
+	mov	r3, #-1342177280
+	mov	r3, r3, asr #14
+	str	r3, [fp, #-16]
+	mov	r3, #-2147483648
+	mov	r3, r3, asr #15
+	str	r3, [fp, #-12]
+	mov	r3, #-2147483648
+	mov	r3, r3, asr #19
+	str	r3, [fp, #-8]
+	ldr	r3, [fp, #-20]
+	mov	r2, #25088
+	str	r2, [r3, #16]
+	ldr	r3, [fp, #-12]
+	mov	r2, #24
+	str	r2, [r3, #0]
+	ldr	r3, [fp, #-12]
+	mov	r2, #24
+	str	r2, [r3, #20]
+	ldr	r3, [fp, #-8]
+	mov	r2, #16384
+	str	r2, [r3, #292]
+	ldr	r3, [fp, #-8]
+	mov	r2, #16384
+	str	r2, [r3, #296]
+	ldr	r2, .L10
+	ldr	r3, [fp, #-8]
+	str	r2, [r3, #184]
+	ldr	r3, [fp, #-8]
+	mov	r2, #7
+	str	r2, [r3, #56]
+	ldr	r3, [fp, #-8]
+	mov	r2, #16384
+	str	r2, [r3, #288]
+	ldr	r3, [fp, #-12]
+	mov	r2, #24
+	str	r2, [r3, #64]
+	bl	Timer3_init
+.L8:
+	b	.L8
+.L11:
+	.align	2
+.L10:
+	.word	taste_irq_handler
+	.size	main, .-main
+	.ident	"GCC: (GNU) 4.4.1"
