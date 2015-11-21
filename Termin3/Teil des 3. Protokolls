@@ -1,0 +1,52 @@
+
+
+  
+
+#
+int main(void)	
+	{
+	StructPMC* pmcbase = PMC_BASE; // Basisadresse PMC
+	StructPIO* piobaseA = PIOA_BASE; // Basisadresse PIOA
+	StructPIO* piobaseB = PIOB_BASE; // Basisadresse PIOB
+	StructAIC* aicbase = AIC_BASE; // Basisadresse AIC
+	pmcbase->PMC_PCER = 0x6200; //PIOA, PIOB, TIMER3 einschalten 
+	// ab hier entsprechend der Aufgabestellung ergÃ¤nzen
+	//**************************************************
+	piobaseB->PIO_PER = 0x18;	
+	Schalter eins und zwei werden aktiviert.
+
+	piobaseB->PIO_ODR = 0x18; 	
+	Schalter eins und zwei werden als Input definiert. 
+
+	aicbase->AIC_IDCR = 0x4000; 	
+	Eventuell vorhandene Interrupts werden durch das Interrupt-Disable-Command-	Register für die PIOB deaktiviert.
+
+	aicbase->AIC_ICCR = 0x4000; 	
+	Eventuell vorhandene Interrupts werden durch das Interrupt-Clear-Command-	Register für die PIOB gelöscht.
+
+	aicbase->AIC_SVR[PIOB_ID] = (unsigned int)taste_irq_handler;	
+	Die Adresse des Interrupts wird in das, für die PIOB verantwortliche, Source-Vector-	Register Geschrieben.
+
+	aicbase->AIC_SMR[PIOB_ID] = 0x7; 	
+	Die ersten 3 Bits des Source-Mode-Registers ,welches mit der 14 adressiert wird und 	für den PIOB verantwortlich ist, werden gesetzt und so die höchste Priorität für den 	Interrupt erzielt.
+
+	aicbase->AIC_IECR = 0x4000; //Aktiviere Interrupts an PIOB	
+	Im Interrupt Enable Command Register wird die PIOB zur Ermöglichung von 	Interrupts eingetragen
+
+	piobaseB->PIO_IER = KEY1 | KEY2;	
+	Im Interrupt-Enable-Register der  PIOB werden Interrupts für die Taster 1 und 2 	abschließend aktiviert 
+
+	Timer3_init();	
+	Hiermit wird die oben erstellte Timer-Initialisierung aufgerufen.
+
+	while(1);	
+	Die "while"-Schleife sorgt dafür, dass das Programm nicht beendet, sondern 	weiterläuft, nachdem alles fertig  initialisiert wurde.
+
+	aicbase->AIC_IDCR = 0x4000; 	
+	Unsere Interrupts werden durch das Interrupt-Disable-Command-Register für die 	PIOB deaktiviert.
+
+	aicbase->AIC_ICCR = 0x4000; 	
+	Unsere Interrupts werden durch das Interrupt-Clear-Command-	Register für die 	PIOB gelöscht.
+
+	return(0)
+	
